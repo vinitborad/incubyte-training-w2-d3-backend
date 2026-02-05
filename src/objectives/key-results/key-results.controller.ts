@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
 import { KeyResultsService } from './key-results.service';
 import { CreateKeyResultDto } from './dto/create-key-result.dto';
+import { ObjectiveNotFoundExceptionFilter } from '../objective-exception-filter';
 
-@Controller('key-results')
+@Controller('')
+@UseFilters(ObjectiveNotFoundExceptionFilter)
 export class KeyResultsController {
   constructor(private readonly keyResultsService: KeyResultsService) {
     this.keyResultsService = keyResultsService;

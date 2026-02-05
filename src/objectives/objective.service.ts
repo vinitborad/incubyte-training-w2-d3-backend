@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { ObjectiveDto } from './dto/objective.dto';
 import { ObjectiveType } from './interface/objective.interface';
 import { PrismaService } from '../prisma.service';
+import { ObjectiveNotFoundException } from './objective-not-found-exception';
 
 @Injectable()
 export class ObjectiveService {
   objectives: ObjectiveType[] = [];
-  constructor(private readonly PrismaService: PrismaService) {}
+  constructor(private readonly PrismaService: PrismaService) { }
 
   getAll(title: string) {
     return this.PrismaService.objective.findMany({
@@ -21,6 +22,16 @@ export class ObjectiveService {
       },
     });
   }
+
+  async getById(objectiveId: string) {
+    const objective = await this.PrismaService.objective.findUnique({ where: { id: objectiveId } });
+    if (objective) {
+      return objective;
+    } else {
+      throw new ObjectiveNotFoundException(objectiveId);
+    }
+  }
+
   create(objectiveDto: ObjectiveDto) {
     return this.PrismaService.objective.create({ data: objectiveDto });
   }

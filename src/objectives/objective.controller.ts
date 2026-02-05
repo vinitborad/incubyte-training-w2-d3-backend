@@ -7,13 +7,16 @@ import {
   Patch,
   Post,
   Query,
-  ValidationPipe,
+  UseFilters,
 } from '@nestjs/common';
 import { ObjectiveService } from './objective.service';
 import { ObjectiveDto } from './dto/objective.dto';
 import { type ObjectiveType } from './interface/objective.interface';
+import { ValidatePipe } from './pipes/validate.pipe';
+import { ObjectiveNotFoundExceptionFilter } from './objective-exception-filter';
 
 @Controller()
+@UseFilters(ObjectiveNotFoundExceptionFilter)
 export class ObjectiveController {
   constructor(private readonly objectiveService: ObjectiveService) {
     this.objectiveService = objectiveService;
@@ -23,8 +26,13 @@ export class ObjectiveController {
     return this.objectiveService.getAll(title);
   }
 
+  @Get(":objectiveId")
+  getById(@Param("objectiveId") objectiveId: string) {
+    return this.objectiveService.getById(objectiveId);
+  }
+
   @Post()
-  create(@Body(new ValidationPipe()) objectiveDto: ObjectiveDto) {
+  create(@Body(new ValidatePipe()) objectiveDto: ObjectiveDto, @Body("title", new ValidatePipe()) title: string) {
     return this.objectiveService.create(objectiveDto);
   }
 
@@ -34,7 +42,12 @@ export class ObjectiveController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() objectiveDto: ObjectiveDto) {
+  update(
+    @Param('id', new ValidatePipe()) id: string,
+    @Body() objectiveDto: ObjectiveDto
+  ) {
     return this.objectiveService.update(id, objectiveDto);
   }
+
+
 }
