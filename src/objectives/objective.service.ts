@@ -7,7 +7,7 @@ import { ObjectiveNotFoundException } from './objective-not-found-exception';
 @Injectable()
 export class ObjectiveService {
   objectives: ObjectiveType[] = [];
-  constructor(private readonly PrismaService: PrismaService) { }
+  constructor(private readonly PrismaService: PrismaService) {}
 
   getAll(title: string) {
     return this.PrismaService.objective.findMany({
@@ -24,7 +24,9 @@ export class ObjectiveService {
   }
 
   async getById(objectiveId: string) {
-    const objective = await this.PrismaService.objective.findUnique({ where: { id: objectiveId } });
+    const objective = await this.PrismaService.objective.findUnique({
+      where: { id: objectiveId },
+    });
     if (objective) {
       return objective;
     } else {
@@ -40,10 +42,17 @@ export class ObjectiveService {
     return this.PrismaService.objective.delete({ where: { id } });
   }
 
-  update(id: string, objectiveDto: ObjectiveDto) {
-    return this.PrismaService.objective.update({
-      where: { id },
-      data: objectiveDto,
-    });
+  async update(objectiveId: string, objectiveDto: ObjectiveDto) {
+    try {
+      return await this.PrismaService.objective.update({
+        where: { id: objectiveId },
+        data: objectiveDto,
+      });
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new ObjectiveNotFoundException(objectiveId);
+      }
+      throw error;
+    }
   }
 }

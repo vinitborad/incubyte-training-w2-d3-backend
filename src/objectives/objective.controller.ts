@@ -26,13 +26,13 @@ export class ObjectiveController {
     return this.objectiveService.getAll(title);
   }
 
-  @Get(":objectiveId")
-  getById(@Param("objectiveId") objectiveId: string) {
+  @Get(':objectiveId')
+  getById(@Param('objectiveId') objectiveId: string) {
     return this.objectiveService.getById(objectiveId);
   }
 
   @Post()
-  create(@Body(new ValidatePipe()) objectiveDto: ObjectiveDto, @Body("title", new ValidatePipe()) title: string) {
+  create(@Body(new ValidatePipe()) objectiveDto: ObjectiveDto) {
     return this.objectiveService.create(objectiveDto);
   }
 
@@ -44,10 +44,8 @@ export class ObjectiveController {
   @Patch(':id')
   update(
     @Param('id', new ValidatePipe()) id: string,
-    @Body() objectiveDto: ObjectiveDto
+    @Body() objectiveDto: ObjectiveDto,
   ) {
     return this.objectiveService.update(id, objectiveDto);
   }
-
-
 }
