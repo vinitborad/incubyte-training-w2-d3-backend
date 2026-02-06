@@ -1,6 +1,5 @@
 import { isLeapYear } from './isLeapYear';
 
-
 describe('IsLeapYear', () => {
   it('should return true when the value is divisible by 400', () => {
     const result = isLeapYear(2000);

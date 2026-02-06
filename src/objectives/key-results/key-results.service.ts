@@ -5,7 +5,7 @@ import { ObjectiveNotFoundException } from '../objective-not-found-exception';
 
 @Injectable()
 export class KeyResultsService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   getAll() {
     return this.prismaService.keyResult.findMany();
@@ -28,5 +28,11 @@ export class KeyResultsService {
     } else {
       throw new ObjectiveNotFoundException(objectiveId);
     }
+  }
+
+  async delete(id: string) {
+    return this.prismaService.keyResult.delete({
+      where: { id },
+    });
   }
 }
