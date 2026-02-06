@@ -6,12 +6,15 @@ import { ObjectiveNotFoundException } from '../objective-not-found-exception';
 @Injectable()
 export class KeyResultsService {
   constructor(private readonly prismaService: PrismaService) { }
+
   getAll() {
     return this.prismaService.keyResult.findMany();
   }
 
   async create(objectiveId: string, createKeyResultDto: CreateKeyResultDto) {
-    const objective = await this.prismaService.objective.findUnique({ where: { id: objectiveId } })
+    const objective = await this.prismaService.objective.findUnique({
+      where: { id: objectiveId },
+    });
     if (objective) {
       const createdKeyResult = this.prismaService.keyResult.create({
         data: {
@@ -21,10 +24,9 @@ export class KeyResultsService {
           },
         },
       });
-      return createdKeyResult
-    }
-    else {
-      throw new ObjectiveNotFoundException(objectiveId)
+      return createdKeyResult;
+    } else {
+      throw new ObjectiveNotFoundException(objectiveId);
     }
   }
 }

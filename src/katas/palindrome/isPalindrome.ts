@@ -1,5 +1,6 @@
 export const isPalindrome = (value: string) => {
-    const trimmedValue = value.trim();
-    const reverseValue = trimmedValue.split('').reverse().join('');
-    return trimmedValue === reverseValue;
-}
+  let trimmedValue = value.trim().toLowerCase();
+  trimmedValue = trimmedValue.split(' ').join('');
+  const reverseValue = trimmedValue.split('').reverse().join('');
+  return trimmedValue === reverseValue;
+};
